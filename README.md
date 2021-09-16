@@ -8,3 +8,5 @@ Currently, only support:
 - fully connected layers (Fc)
 - convolutional layers (Conv2d)
 - Sequential classification models
+
+sample_img.npy are a couple images from MNIST
