@@ -95,10 +95,9 @@ class Conv2d(Layer):
                 top_right = i*self.stride + k 
                 bottom_left = j*self.stride 
                 bottom_right = j*self.stride + k 
-
-                vol_x = X[:, top_left:top_right, bottom_left:bottom_right,:]
                 
                 # ------------------------- slow implementation ---------------- for better intuition
+                # vol_x = X[:, top_left:top_right, bottom_left:bottom_right,:]
                 # for curr_c in range(out_c):
                 #     output[:,i,j, curr_c] = (vol_x*self.w[:,:,:,curr_c]).sum(axis = (1,2,3)) + self.b[curr_c]
                 
