@@ -103,13 +103,8 @@ class Conv2d(Layer):
                 #     output[:,i,j, curr_c] = (vol_x*self.w[:,:,:,curr_c]).sum(axis = (1,2,3)) + self.b[curr_c]
                 
                 # ------------------------- fast implementation -----------------
-                h_start = top_left
-                h_end = top_right
-                w_start = bottom_left
-                w_end = bottom_right
-                a_prev_pad = self.inp
                 output[:, i, j, :] = np.sum(
-                    a_prev_pad[:, h_start:h_end, w_start:w_end, :, np.newaxis] *
+                    self.inp[:, top_left:top_right, bottom_left:bottom_right, :, np.newaxis] *
                     self.w[np.newaxis, :, :, :],
                     axis=(1, 2, 3)
                 )
