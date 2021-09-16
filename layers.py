@@ -98,7 +98,7 @@ class Conv2d(Layer):
 
                 vol_x = X[:, top_left:top_right, bottom_left:bottom_right,:]
                 
-                # ------------------------- slow implementation ----------------
+                # ------------------------- slow implementation ---------------- for better intuition
                 # for curr_c in range(out_c):
                 #     output[:,i,j, curr_c] = (vol_x*self.w[:,:,:,curr_c]).sum(axis = (1,2,3)) + self.b[curr_c]
                 
@@ -142,11 +142,11 @@ class Conv2d(Layer):
                 bottom_left = j*self.stride 
                 bottom_right = j*self.stride + k
 
-                vol_act = act_grad[:, i:i+1, j:j+1, :]#act_grad[:, i, j, :]
-                vol_x = self.inp[:, top_left:top_right, bottom_left:bottom_right,:]
-
                 
-                # --------------------------- slow implementation --------------------------
+                # --------------------------- slow implementation -------------------------- for better intuition
+                # vol_act = act_grad[:, i:i+1, j:j+1, :]#act_grad[:, i, j, :]
+                # vol_x = self.inp[:, top_left:top_right, bottom_left:bottom_right,:]
+
                 #dy/dx
                 # for inp_c in  range(c_in):
                 #     output[:,top_left:top_right, bottom_left:bottom_right, inp_c] += (vol_act*self.w[:,:,inp_c,:]).sum(axis = -1)
@@ -157,22 +157,15 @@ class Conv2d(Layer):
                         
                
                 # ------------------------------ fast implementation ------------------------
-                h_start = top_left
-                h_end = top_right
-                w_start = bottom_left
-                w_end = bottom_right
-                da_curr = act_grad
-                a_prev_pad = self.inp
-
-                output1[:, h_start:h_end, w_start:w_end, :] += np.sum(
+                output1[:, top_left:top_right, bottom_left:bottom_right, :] += np.sum(
                     self.w[np.newaxis, :, :, :, :] *
-                    da_curr[:, i:i+1, j:j+1, np.newaxis, :],
+                    act_grad[:, i:i+1, j:j+1, np.newaxis, :],
                     axis=4
                 )
                 
                 dw += np.sum(
-                    a_prev_pad[:, h_start:h_end, w_start:w_end, :, np.newaxis] *
-                    da_curr[:, i:i+1, j:j+1, np.newaxis, :],
+                    self.inp[:, top_left:top_right, bottom_left:bottom_right, :, np.newaxis] *
+                    act_grad[:, i:i+1, j:j+1, np.newaxis, :],
                     axis=0
                 )
 
