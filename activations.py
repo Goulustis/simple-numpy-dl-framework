@@ -29,11 +29,6 @@ class Softmax(Layer):
         norm = np.exp(X_shift)
         denom = norm.sum(axis=-1, keepdims = True)
         self.act = norm/denom
-
-        try:
-            warnings.warn(Warning())
-        except Warning:
-            print('caugth a warning')
         
         return self.act
     
