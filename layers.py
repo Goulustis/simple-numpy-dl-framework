@@ -114,7 +114,6 @@ class Conv2d(Layer):
 
     def backward(self, act_grad):
         # gradient formula intuition from: https://medium.com/@pavisj/convolutions-and-backpropagations-46026a8f5d2c
-        # reaction after reading blog about how to calculate: This needs to be in lecture if on test....
        
         n, h_out, w_out, c_out = act_grad.shape
         n, h_in, w_in, c_in = self.inp.shape 
