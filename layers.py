@@ -16,11 +16,31 @@ class Layer:
         self.gradw = None 
         self.gradb = None
     
+    def __call__(self, X):
+        return self.forward(X)
+    
+    def forward(self, X):
+        # to be implemented by specific layers
+        pass
+
+    def backward(self, act_grad):
+        # to be implemented by specific layer
+        pass
+    
     def get_weights(self):
         return self.w, self.b
     
     def get_grads(self):
         return self.gradw, self.gradb
+
+
+class LossLayer(Layer):
+    def forward(self, X, y):
+        pass
+
+    def __call__(self, X, y):
+        return self.forward(X,y)
+        
 
 
 class Fc(Layer):
@@ -43,8 +63,8 @@ class Fc(Layer):
     def backward(self, act_grad): 
         n = len(self.inp)
 
-        self.gradw = (act_grad.T@self.inp)/n
-        self.gradb = np.sum(act_grad, axis = 0).reshape(self.b.shape)/n
+        self.gradw = (act_grad.T@self.inp)
+        self.gradb = np.sum(act_grad, axis = 0).reshape(self.b.shape)
 
         return act_grad@self.w # 
     
@@ -166,7 +186,7 @@ class Conv2d(Layer):
         # self.gradw = self.gradw/n
 
         # --------------------- calc fast grad-----------------------
-        dw = dw/n
+        dw = dw
         self.gradw = dw 
         output = output1
 
