@@ -29,7 +29,7 @@ class Sequential:
 
             epoch_loss = 0
             # for X_batch, y_batch in zip(X_batches,y_batches):
-            for X_batch, y_batch in tqdm(list(zip(X_batches,y_batches))):
+            for X_batch, y_batch in tqdm(zip(X_batches,y_batches), total = len(X_batches)):
                 pred = self.forward(X_batch)
                 loss = self.loss_fnc(pred, y_batch)
                 self.optim.step(self.layers)
