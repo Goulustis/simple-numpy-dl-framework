@@ -67,8 +67,8 @@ class Fc(Layer):
     def backward(self, act_grad): 
         n = len(self.inp)
 
-        self.gradw = (act_grad.T@self.inp)
-        self.gradb = np.sum(act_grad, axis = 0).reshape(self.b.shape)
+        self.gradw = (act_grad.T@self.inp)/n
+        self.gradb = np.sum(act_grad, axis = 0).reshape(self.b.shape)/n
 
         return act_grad@self.w # 
     
@@ -190,7 +190,7 @@ class Conv2d(Layer):
         # self.gradw = self.gradw/n
 
         # --------------------- calc fast grad-----------------------
-        dw = dw
+        dw = dw/n
         self.gradw = dw 
         output = output1
 
