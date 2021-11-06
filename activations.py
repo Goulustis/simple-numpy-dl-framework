@@ -43,7 +43,10 @@ class Softmax(Layer):
             
             return prev_grad@d_soft
         
-        grads = np.stack([calc_single_grad(ac, gd) for ac,gd in zip(self.act, grad_act)])
+        grads = np.zeros(self.act.shape)
+        for i, (act, grad) in enumerate(zip(self.act, grad_act)):
+            grads[i] = calc_single_grad(act, grad)
+        
 
         return grads
         # derivative = output - y, grad_act already is that
@@ -81,9 +84,7 @@ def test_cross_grad():
     y_idxs = np.random.choice(10, n)
     y = np.zeros((n,c))
     y[list(range(n)), y_idxs] = 1.
-    # y[:, *y_idxs] = 1.
-    y = y.reshape(n,c)
-    # y = np.clip(y, eps, 1-eps)
+
 
     pred = softmax(X)
     _ = criterion(X, y)

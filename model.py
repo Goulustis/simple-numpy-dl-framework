@@ -8,7 +8,7 @@ class Sequential:
 
     def __init__(self, layers = [], lr = 0.1, classes = 10, training = True, epochs = 10, batch_size = 500, loss_fnc = CrossEntropy):
         self.layers = layers 
-        self.optim = GD(lr)
+        self.optim = GD(lr, self.layers)
         self.training = training
         self.epochs = epochs
         self.batch_size = batch_size
@@ -32,7 +32,7 @@ class Sequential:
             for X_batch, y_batch in tqdm(zip(X_batches,y_batches), total = len(X_batches)):
                 pred = self.forward(X_batch)
                 loss = self.loss_fnc(pred, y_batch)
-                self.optim.step(self.layers)
+                self.optim.step()
 
                 epoch_loss += np.abs(loss).sum()/batch_size
 
@@ -69,12 +69,13 @@ class Sequential:
 
 # optimizer
 class GD:
-    def __init__(self, lr):
+    def __init__(self, lr, params):
         self.lr = lr 
+        self.params = params
     
-    def step(self, layers):
+    def step(self):
 
-        for l in layers:
+        for l in self.params:
             ws, g = l.get_weights(), l.get_grads()
         
             if None is ws[0]:
@@ -85,6 +86,10 @@ class GD:
             w_new = w - self.lr*gradw
             b_new = b - self.lr*gradb
             l.update_weights(w_new, b_new)
+    
+    def zero_grad(self):
+        for l in self.params:
+            l.zero_grad()
 
 # helper function, maybe make another utils?
 def gen_batch(X,y, batch_size = 100):

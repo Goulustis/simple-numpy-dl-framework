@@ -30,6 +30,10 @@ class Layer:
     def get_weights(self):
         return self.w, self.b
     
+    def zero_grad(self):
+        self.gradw = None 
+        self.gradb = None
+    
     def get_grads(self):
         return self.gradw, self.gradb
 
