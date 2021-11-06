@@ -1,18 +1,18 @@
 import numpy as np
 from tqdm import tqdm
-import findMin
 
 from layers import Fc, Conv2d
 from activations import Relu, Softmax
 
 class Sequential:
 
-    def __init__(self, layers = [], lr = 0.1, training = True, epochs = 10, batch_size = 500):
+    def __init__(self, layers = [], lr = 0.1, classes = 10, training = True, epochs = 10, batch_size = 500):
         self.layers = layers 
         self.optim = GD(lr)
-        self.training = True
+        self.training = training
         self.epochs = epochs
         self.batch_size = batch_size
+        self.classes = classes
 
     
     def fit(self, X, y):
@@ -55,7 +55,7 @@ class Sequential:
             act = l.forward(act)
         
         if self.training == False:
-            act = act.reshape(n,10)
+            act = act.reshape(n,self.classes)
             act = np.argmax(act, axis = -1)
         
         return act
